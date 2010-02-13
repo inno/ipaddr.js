@@ -1,0 +1,197 @@
+<!--
+ipAddr - An IP utility knife for javascript
+Copyright (C) 2010 Clif Bratcher
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<html>
+<head>
+<script type='text/javascript' src='js/ipAddr.js'></script>
+<script type='text/javascript' src='../jsunit/app/jsUnitCore.js'></script>
+<style type='text/css'>
+table.info {
+  width: 640;
+  border-collapse: collapse;
+  border-width: 1px;
+  border-spacing: 1px;
+  border-style: solid;
+  border-color: black;
+}
+
+table.info td {
+  border-width: 1px;
+  padding: 2px;
+  border-style: solid;
+  border-color: black;
+}
+
+input.text {
+    border-style: solid;
+    border-width: 1pt;
+}
+</style>
+
+</head>
+<body>
+<script language="JavaScript">
+
+function Looper (tests, bool, version) {
+  for (var i=0; i < tests.length; i++) {
+    var addr = tests[i];
+    var ip = new ipAddr(addr);
+    assertEquals(addr, version, ip.Version());
+    if (bool)
+      assertTrue(addr, ip.Valid());
+    else
+      assertFalse(addr, ip.Valid());
+  }
+}
+
+
+function testIPv4CidrRange () {
+  var tests = 300;
+  while(tests--) {
+    var cidr = Math.floor(Math.random()*300) - Math.floor(Math.random()*150);
+
+    var ip = new ipAddr('187.2.3.4', cidr);
+
+    if (cidr < 0 || 32 < cidr)
+      assertFalse("CIDR: " + cidr, ip.ValidCidr());
+    else
+      assertTrue("CIDR:" + cidr, ip.ValidCidr());
+  }
+}
+
+
+function testIPv6CidrRange () {
+  var tests = 300;
+  while(tests--) {
+    var cidr = Math.floor(Math.random()*500) - Math.floor(Math.random()*250);
+
+    var ip = new ipAddr('2001::', cidr);
+
+    if (cidr < 0 || 128 < cidr)
+      assertFalse("CIDR: " + cidr, ip.ValidCidr());
+    else
+      assertTrue("CIDR:" + cidr, ip.ValidCidr());
+  }
+}
+
+function testTotallyInvalid () {
+  var tests = [
+    '1',
+    '1.2',
+    '1.2.3',
+    'bad'];
+
+  Looper(tests, false, 0);
+
+}
+
+function testInvalidIPv4 () {
+  var tests = [
+    '1.2.3.4.5',
+    '256.256.256.256',
+    'q.1.2.3',
+    'a.b.c.d'];
+
+  Looper(tests, false, 4);
+}
+
+function testValidIPv4 () {
+
+  var tests = [
+    '0.0.0.0',
+    '10.0.0.0',
+    '169.254.0.0',
+    '172.16.0.0',
+    '192.168.0.0',
+    '127.0.0.1',
+    '255.255.255.255',
+    '254.0.0.0',
+    '254.255.255.255'];
+
+  Looper(tests, true, 4);
+}
+
+function testInvalidIPv6 () {
+  var tests = [
+    '1:2:3:4:quux',
+    '12::34::56',
+    ':::',
+    '0:0:0:0:0:0:0:0:0',
+    'FF01: 0: 0: 0: 0: 0: 0: :101',
+    '1.2.3.4:FFFF::',
+    '::FFFF:192.168.0.1:0',
+    ':0000:0000:0000:0000:0000:1',
+    '0000:0000:0000:0000:0000:0000:0000:',
+    '::192.168.0.1',
+    ':',
+    '::00000',
+    '00000::',
+    '00000::00000',
+    '0:0',
+    '0:0:0',
+    '0:0:0:0',
+    '0:0:0:0:0',
+    '0:0:0:0:0:0',
+    '0:0:0:0:0:0:0',
+    '0:0:0:0:0:0:0:',
+    '0:0:0:0:0:0:0:0:'];
+
+
+  Looper(tests, false, 6);
+}
+
+function testValidIPv6 () {
+  var tests = [
+    '::1',
+    '0:0:0:0:0:0:0:1',
+    '::',
+    '0:0:0:0:0:0:0:0',
+    '::FFFF',
+    '::FFFF:FFFF',
+    '::FFFF:FFFF:FFFF',
+    '::FFFF:FFFF:FFFF:FFFF',
+    '::FFFF:FFFF:FFFF:FFFF:FFFF',
+    '::FFFF:FFFF:FFFF:FFFF:FFFF:FFFF',
+    '::FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF',
+    'FFFF::',
+    'FFFF:FFFF::',
+    'FFFF:FFFF:FFFF::',
+    'FFFF:FFFF:FFFF:FFFF::',
+    'FFFF:FFFF:FFFF:FFFF:FFFF::',
+    'FFFF:FFFF:FFFF:FFFF:FFFF:FFFF::',
+    'FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF::',
+    'FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF',
+    '2001:DB8::8:800:200C:417A',
+    '2001:DB8:0:0:8:800:200C:417A',
+    'FF01::101',
+    'FF01:0:0:0:0:0:0:101',
+    '::FFFF:192.168.0.1',
+    '::0000:0000:0000:0000:0000:1'];
+
+  Looper(tests, true, 6);
+}
+
+function testAssertion () {
+  assert(true);
+}
+</script>
+<tt>
+Run me through jsUnit!
+</tt>
+</body>
+</html>

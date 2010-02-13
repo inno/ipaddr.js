@@ -1,0 +1,208 @@
+<!--
+ipAddr - An IP utility knife for javascript
+Copyright (C) 2010 Clif Bratcher
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<html>
+<head>
+<script type='text/javascript' src='../js/ipAddr.js'></script>
+<style type='text/css'>
+table.info {
+  width: 640;
+  border-collapse: collapse;
+  border-width: 1px;
+  border-spacing: 1px;
+  border-style: solid;
+  border-color: black;
+}
+
+table.info td {
+  border-width: 1px;
+  padding: 2px;
+  border-style: solid;
+  border-color: black;
+}
+
+input.text {
+    border-style: solid;
+    border-width: 1pt;
+}
+</style>
+
+</head>
+<body>
+<script>
+function flush_fields () {
+  var fields = [
+    'ip_valid',
+    'host_msg',
+    'v6_address',
+    'v6_full_address',
+    'v6_expanded',
+    'v6_netmask',
+    'v6_network',
+    'v6_wildcard',
+    'v6_min_host',
+    'v6_max_host',
+    'v4_address',
+    'v4_full_address',
+    'v4_expanded',
+    'v4_netmask',
+    'v4_network',
+    'v4_wildcard',
+    'v4_min_host',
+    'v4_max_host',
+    'v4_broadcast',
+    'hosts',
+    'ip_version'];
+
+  for (var i=0; i < fields.length; i++)
+      document.getElementById(fields[i]).innerHTML  = '';
+}
+
+function validate_me(obj) {
+  flush_fields();
+
+  if (!obj.value)
+    return;
+  var addr = obj.value.split('/');
+  var ip;
+
+  if (addr[1])
+    ip = new ipAddr(addr[0], addr[1]);
+  else
+    ip = new ipAddr(addr[0]);
+
+  document.getElementById('ip_valid').innerHTML  = ip.Valid();
+
+  if (ip.Valid())
+    document.getElementById('host_msg').innerHTML = 'Valid!';
+  else
+    document.getElementById('host_msg').innerHTML = ip.getMsg();
+
+  if (ip.Version() == 6) {
+    document.getElementById('v6_address').innerHTML  = ip.getAddress();
+    document.getElementById('v6_full_address').innerHTML  = ip.getFullAddress();
+    document.getElementById('v6_expanded').innerHTML  = ip.getExpanded();
+    document.getElementById('v6_netmask').innerHTML  = ip.getNetmask();
+    document.getElementById('v6_network').innerHTML  = ip.getNetwork();
+    document.getElementById('v6_wildcard').innerHTML = ip.getWildcard();
+    document.getElementById('v6_min_host').innerHTML = ip.getMinHost();
+    document.getElementById('v6_max_host').innerHTML = ip.getMaxHost();
+  }
+  else if (ip.Version() == 4) {
+    document.getElementById('v4_address').innerHTML  = ip.getAddress();
+    document.getElementById('v4_full_address').innerHTML  = ip.getFullAddress();
+    document.getElementById('v4_expanded').innerHTML  = ip.getExpanded();
+    document.getElementById('v4_netmask').innerHTML  = ip.getNetmask();
+    document.getElementById('v4_network').innerHTML  = ip.getNetwork();
+    document.getElementById('v4_wildcard').innerHTML = ip.getWildcard();
+    document.getElementById('v4_min_host').innerHTML = ip.getMinHost();
+    document.getElementById('v4_max_host').innerHTML = ip.getMaxHost();
+    document.getElementById('v4_broadcast').innerHTML = ip.getBroadcast();
+  }
+
+  document.getElementById('hosts').innerHTML = ip.getHostCount();
+  document.getElementById('ip_version').innerHTML = ip.Version() ? ('IPv' + ip.Version()) : '';
+}
+</script>
+<tt>
+<table>
+<tr>
+<td>
+<input type='text' id='ipv4' onKeyUp='script:validate_me(this);'>
+</td>
+<td>
+<div id='host_msg'>&lt;--- Enter something</div>
+</td>
+</tr>
+</table>
+<table class="info">
+<tr>
+<th style="width: 1%"><strong>IPv4</strong></th>
+<th style="width: 120px">&nbsp;</th>
+<th style="width: 1%"><strong>IPv6</strong></th>
+<th>&nbsp;</th>
+<tr>
+<td>Address</td>
+<td><span id='v4_address'></span></td>
+<td>Address</td>
+<td><span id='v6_address'></span></td>
+</tr>
+<tr>
+<td>Full Address</td>
+<td><span id='v4_full_address'></span></td>
+<td>Full Address</td>
+<td><span id='v6_full_address'></span></td>
+</tr>
+<tr>
+<td>Expanded</td>
+<td><span id='v4_expanded'></span></td>
+<td>Expanded</td>
+<td><span id='v6_expanded'></span></td>
+</tr>
+<tr>
+<td>Netmask</td>
+<td><span id='v4_netmask'></span></td>
+<td>Netmask</td>
+<td><span id='v6_netmask'></span></td>
+</tr>
+<tr>
+<td>Network</td>
+<td><span id='v4_network'></span></td>
+<td>Network</td>
+<td><span id='v6_network'></span></td>
+</tr>
+<tr>
+<td>Wildcard</td>
+<td><span id='v4_wildcard'></span></td>
+<td>Wildcard</td>
+<td><span id='v6_wildcard'></span></td>
+</tr>
+<tr>
+<td>Minimum&nbsp;Host</td>
+<td><span id='v4_min_host'></span></td>
+<td>Minimum&nbsp;Host</td>
+<td><span id='v6_min_host'></span></td>
+</tr>
+<tr>
+<td>Maximum&nbsp;Host</td>
+<td><span id='v4_max_host'></span></td>
+<td>Maximum&nbsp;Host</td>
+<td><span id='v6_max_host'></span></td>
+</tr>
+<tr>
+<td>Broadcast</td>
+<td><span id='v4_broadcast'></span></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Hosts</td>
+<td colspan="3"><span id='hosts'></span></td>
+</tr>
+<tr>
+<td>Version</td>
+<td colspan="3"><span id='ip_version'></span></td>
+</tr>
+<tr>
+<td>Validity</td>
+<td colspan="3"><span id='ip_valid'></span></td>
+</tr>
+</table>
+</tt>
+</body>
+</html>
