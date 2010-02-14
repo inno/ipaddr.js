@@ -60,6 +60,19 @@ function Looper (tests, bool, version) {
 }
 
 
+function testIPv4Hosts () {
+  var tests = ['4294967296','2147483648','1073741824','536870912','268435456',
+               '134217728','67108864','33554432','16777216','8388608',
+               '4194304','2097152','1048576','524288','262144','131072',
+               '65536','32768','16384','8192','4096','2048','1024','512',
+               '256','128','64','32','16','8','4','2','1'];
+
+    for (var i=0; i <= 32; i++) {
+        var ip = new ipAddr('4.3.2.1', i);
+        assertEquals("V4 CIDR "+i, tests[i], ip.getHostCount());
+    }
+}
+
 function testIPv4CidrRange () {
   var tests = 300;
   while(tests--) {
