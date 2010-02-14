@@ -34,12 +34,12 @@ function ipAddr(addr, cidr) {
   if (this.addr.match(/:/)) {
     this.version = 6;
     this.maxcidr = 128;
-    if (!this.cidr) this.cidr = 128;
+    if (isNaN(this.cidr)) this.cidr = 128;
   }
   else if (this.addr.length >= 7) {
     this.version = 4;
     this.maxcidr = 32;
-    if (!this.cidr) this.cidr = 32;
+    if (isNaN(this.cidr)) this.cidr = 32;
   }
 
   this.getMsg     = function () {return this.msg;}
