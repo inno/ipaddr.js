@@ -232,11 +232,17 @@ function testIPv4CidrRange () {
     var cidr = Math.floor(Math.random()*300) - Math.floor(Math.random()*150);
 
     var ip = new ipAddr('187.2.3.4', cidr);
+    var ip2 = new ipAddr('54.32.10.1/' + cidr);
 
     if (cidr < 0 || 32 < cidr)
       assertFalse("CIDR: " + cidr, ip.ValidCidr());
     else
       assertTrue("CIDR:" + cidr, ip.ValidCidr());
+
+    if (cidr < 0 || 32 < cidr)
+      assertFalse("CIDR: " + cidr, ip2.ValidCidr());
+    else
+      assertTrue("CIDR: " + cidr, ip2.ValidCidr());
   }
 }
 
@@ -247,11 +253,17 @@ function testIPv6CidrRange () {
     var cidr = Math.floor(Math.random()*500) - Math.floor(Math.random()*250);
 
     var ip = new ipAddr('2001::', cidr);
+    var ip2 = new ipAddr('2001::/' + cidr);
 
     if (cidr < 0 || 128 < cidr)
       assertFalse("CIDR: " + cidr, ip.ValidCidr());
     else
       assertTrue("CIDR:" + cidr, ip.ValidCidr());
+
+    if (cidr < 0 || 128 < cidr)
+      assertFalse("CIDR: " + cidr, ip2.ValidCidr());
+    else
+      assertTrue("CIDR:" + cidr, ip2.ValidCidr());
   }
 }
 

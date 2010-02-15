@@ -31,6 +31,13 @@ function ipAddr(addr, cidr) {
   if (!addr)
     return this.setFailMsg('enterAddress');
 
+  /* CIDR notation has precidence over an argument */
+  if (this.addr.match(/\//)) {
+    var addrsp  = this.addr.split('/');
+    this.addr = addrsp[0];
+    this.cidr = addrsp[1];
+  }
+
   if (this.addr.match(/:/)) {
     this.version = 6;
     this.maxcidr = 128;
