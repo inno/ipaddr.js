@@ -79,44 +79,44 @@ function validate_me(obj) {
 
   if (!obj.value)
     return;
-  var addr = obj.value.split('/');
+//  var addr = obj.value.split('/');
   var ip;
 
-  if (addr[1])
-    ip = new ipAddr(addr[0], addr[1]);
-  else
-    ip = new ipAddr(addr[0]);
+//  if (addr[1])
+//    ip = new ipAddr(addr[0], addr[1]);
+//  else
+    ip = new ipAddr(obj.value);
 
   document.getElementById('ip_valid').innerHTML  = ip.Valid();
 
   if (ip.Valid())
     document.getElementById('host_msg').innerHTML = 'Valid!';
   else
-    document.getElementById('host_msg').innerHTML = ip.getMsg();
+    document.getElementById('host_msg').innerHTML = ip.Msg();
 
   if (ip.Version() == 6) {
-    document.getElementById('v6_address').innerHTML  = ip.getAddress();
-    document.getElementById('v6_full_address').innerHTML  = ip.getFullAddress();
-    document.getElementById('v6_expanded').innerHTML  = ip.getExpanded();
-    document.getElementById('v6_netmask').innerHTML  = ip.getNetmask();
-    document.getElementById('v6_network').innerHTML  = ip.getNetwork();
-    document.getElementById('v6_wildcard').innerHTML = ip.getWildcard();
-    document.getElementById('v6_min_host').innerHTML = ip.getMinHost();
-    document.getElementById('v6_max_host').innerHTML = ip.getMaxHost();
+    document.getElementById('v6_address').innerHTML  = ip.Address();
+    document.getElementById('v6_full_address').innerHTML  = ip.FullAddress();
+    document.getElementById('v6_expanded').innerHTML  = ip.Expanded();
+    document.getElementById('v6_netmask').innerHTML  = ip.Netmask();
+    document.getElementById('v6_network').innerHTML  = ip.Network();
+    document.getElementById('v6_wildcard').innerHTML = ip.Wildcard();
+    document.getElementById('v6_min_host').innerHTML = ip.MinHost();
+    document.getElementById('v6_max_host').innerHTML = ip.MaxHost();
   }
   else if (ip.Version() == 4) {
-    document.getElementById('v4_address').innerHTML  = ip.getAddress();
-    document.getElementById('v4_full_address').innerHTML  = ip.getFullAddress();
-    document.getElementById('v4_expanded').innerHTML  = ip.getExpanded();
-    document.getElementById('v4_netmask').innerHTML  = ip.getNetmask();
-    document.getElementById('v4_network').innerHTML  = ip.getNetwork();
-    document.getElementById('v4_wildcard').innerHTML = ip.getWildcard();
-    document.getElementById('v4_min_host').innerHTML = ip.getMinHost();
-    document.getElementById('v4_max_host').innerHTML = ip.getMaxHost();
-    document.getElementById('v4_broadcast').innerHTML = ip.getBroadcast();
+    document.getElementById('v4_address').innerHTML  = ip.Address();
+    document.getElementById('v4_full_address').innerHTML  = ip.FullAddress();
+    document.getElementById('v4_expanded').innerHTML  = ip.Expanded();
+    document.getElementById('v4_netmask').innerHTML  = ip.Netmask();
+    document.getElementById('v4_network').innerHTML  = ip.Network();
+    document.getElementById('v4_wildcard').innerHTML = ip.Wildcard();
+    document.getElementById('v4_min_host').innerHTML = ip.MinHost();
+    document.getElementById('v4_max_host').innerHTML = ip.MaxHost();
+    document.getElementById('v4_broadcast').innerHTML = ip.Broadcast();
   }
 
-  document.getElementById('hosts').innerHTML = ip.getHostCount();
+  document.getElementById('hosts').innerHTML = ip.HostCount();
   document.getElementById('ip_version').innerHTML = ip.Version() ? ('IPv' + ip.Version()) : '';
 }
 </script>
