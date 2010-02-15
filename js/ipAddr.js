@@ -29,7 +29,7 @@ function ipAddr(addr, cidr) {
 
   /* Simple validation */
   if (!addr)
-    return this.setFailMsg('Please enter an address');
+    return this.setFailMsg('enterAddress');
 
   if (this.addr.match(/:/)) {
     this.version = 6;
@@ -43,8 +43,8 @@ function ipAddr(addr, cidr) {
   }
 
   this.getMsg     = function () {return this.msg;}
-  this.setMsg     = function (msg) {this.msg = msg;}
-  this.setFailMsg = function (msg) {this.msg = msg; return false;}
+  this.setMsg     = function (msg) {this.msg = this.l8n(msg);}
+  this.setFailMsg = function (msg) {this.setMsg(msg); return false;}
   this.getCidr    = function () {return this.cidr; }
   this.Version    = function () {return this.version || 0;}
 
@@ -266,14 +266,14 @@ function ipAddr(addr, cidr) {
   this.ip6_expand = function (ip) {
     var colons = (ip.split(':').length - 1);
     if (colons > 8) {
-      this.setMsg('IPv6 Error: too many colons');
+      this.setMsg('IP6ErrorTooManyColons');
       return '';
     }
 
     var missing = 8 - colons;
 
     if (/:::/.test(ip)) {
-      this.setMsg('IPv6 Error: colons grouped too tight');
+      this.setMsg('IP6ErrorColonGrouping');
       return '';
     }
 
@@ -282,11 +282,11 @@ function ipAddr(addr, cidr) {
     ip = ip.replace(/::$/, '::0000');
 
     if (ip.match(/^:/)) {
-      this.setMsg('IPv6 Error: beginning colon');
+      this.setMsg('IP6ErrorStartingColon');
       return '';
     }
     else if (ip.match(/:$/)) {
-      this.setMsg('IPv6 Error: trailing colon');
+      this.setMsg('IP6ErrorTrailingColon');
       return '';
     }
 
@@ -298,7 +298,7 @@ function ipAddr(addr, cidr) {
     for (var i=0; i < oldchunks.length; i++) {
       var chunk = oldchunks[i];
       if (chunk.match(/0{5}/)) {
-        this.setMsg('IPv6 Error: too many zeroes');
+        this.setMsg('IP6ErrorTooManyZeroes');
         return '';
       }
       if (chunk == 0) chunk = '';
@@ -373,7 +373,7 @@ function ipAddr(addr, cidr) {
     if (!isNaN(this.validcidr)) return this.validcidr;
 
     if (this.cidr < 0 || this.maxcidr < this.cidr) {
-      this.setMsg('Error: CIDR block is invalid');
+      this.setMsg('InvalidCidrBlock');
       return this.validcidr = false;
     }
 
@@ -385,7 +385,7 @@ function ipAddr(addr, cidr) {
     if (!this.addr.match(/:/)) return false;
 
     if (!this.addr.match(/^[0-9A-F:.]+$/i))
-      return this.setFailMsg('Ipv6 Error: Address contains an invalid character');
+        return this.setFailMsg('IP6ErrorInvalidChar');
 
     if (this.addr.match(/^.+:FFFF:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/i)) {
       this.addr = this.ip6_ip4_expand(this.addr);
@@ -397,7 +397,7 @@ function ipAddr(addr, cidr) {
     if (!ip) return false;
 
     if (!ip.match(/^(?:[A-F0-9]{4}:){7}[A-F0-9]{4}$/))
-      return this.setFailMsg('IPv6: address does not follow common syntax');
+      return this.setFailMsg('IP6ErrorInvalidSyntax');
 
     return true;
   }
@@ -411,40 +411,40 @@ function ipAddr(addr, cidr) {
     if (host.length < 7) return false;
 
     if (!host.match(/^[\d.]+$/))
-      return this.setFailMsg('IPv4 Error: Must be a dotted quad');
+      return this.setFailMsg('IP4ErrorDottedQuad');
 
     var octet = host.split(/\./);
 
     if (octet.length != 4)
-      return this.setFailMsg('IPv4 Error: must have exactly four octets');
+      return this.setFailMsg('IP4ErrorFourOctets');
 
     for (var i=0; i < 3; i++) {
       var quad = octet[i]
       if (!quad)
-        return this.setFailMsg('IPv4 Error: must have exactly four octets');
+        return this.setFailMsg('IP4ErrorFourOctets');
       else if (quad < 0)
-        return this.setFailMsg('IPv4 Error: octet value must be greater than zero');
+        return this.setFailMsg('IP4ErrorNegativeQuad');
       else if (255 < quad)
-        return this.setFailMsg('IPv4 Error: octet value must be less than 256');
+        return this.setFailMsg('IP4ErrorMassiveQuad');
     }
 
     if (!this.args.block_reserved)
       return true;
 
     if (224 <= octet[0] && octet[0] <= 239)
-      this.setFailMsg('IPv4: block 224/4 reserved for multicast (RFC 3171)');
+      this.setFailMsg('IP4ErrorReservedMulticast');
 
     else if (octet[0] == 0)
-      return this.setFailMsg('IPv4: block reserved for self-identification (RFC 3330)');
+      return this.setFailMsg('IP4ErrorReservedSelfId');
 
     else if (octet[0] == 127)
-      return this.setFailMsg('IPv4: block reserved for loopback (RFC 3330)');
+      return this.setFailMsg('IP4ErrorReservedLoopback');
 
     else if (octet[0] == 255 &&
         octet[1] == 255 &&
         octet[2] == 255 &&
         octet[3] == 255)
-      return this.setFailMsg('IPv4: block reserved for local broadcast (RFC 3330)');
+      return this.setFailMsg('IP4ErrorReservedLocalBroadcast');
 
     return true;
   }
@@ -528,4 +528,7 @@ function ipAddr(addr, cidr) {
 
   return this;
 }
+
+/* This gets overridden by ipAddr_l8n.js */
+ipAddr.prototype.l8n = function (msg) {return msg};
 
