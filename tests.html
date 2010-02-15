@@ -192,7 +192,7 @@ function testIPv6Netmask () {
 
     for (var i=0; i <= 128; i++) {
         var ip = new ipAddr('2000::1', i);
-        assertEquals("V6 CIDR "+i, tests[i], ip.getNetmask());
+        assertEquals("V6 CIDR "+i, tests[i], ip.Netmask());
     }
 }
 
@@ -209,7 +209,7 @@ function testIPv4Netmask () {
 
     for (var i=0; i <= 32; i++) {
         var ip = new ipAddr('4.3.2.1', i);
-        assertEquals("V4 CIDR "+i, tests[i], ip.getNetmask());
+        assertEquals("V4 CIDR "+i, tests[i], ip.Netmask());
     }
 }
 
@@ -222,7 +222,7 @@ function testIPv4Hosts () {
 
     for (var i=0; i <= 32; i++) {
         var ip = new ipAddr('4.3.2.1', i);
-        assertEquals("V4 CIDR "+i, tests[i], ip.getHostCount());
+        assertEquals("V4 CIDR "+i, tests[i], ip.HostCount());
     }
 }
 

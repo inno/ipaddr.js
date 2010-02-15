@@ -42,10 +42,10 @@ function ipAddr(addr, cidr) {
     if (isNaN(this.cidr)) this.cidr = 32;
   }
 
-  this.getMsg     = function () {return this.msg;}
+  this.Msg        = function () {return this.msg;}
   this.setMsg     = function (msg) {this.msg = this.l8n(msg);}
   this.setFailMsg = function (msg) {this.setMsg(msg); return false;}
-  this.getCidr    = function () {return this.cidr; }
+  this.Cidr       = function () {return this.cidr; }
   this.Version    = function () {return this.version || 0;}
 
   String.prototype.repeat = function(num) {
@@ -53,12 +53,12 @@ function ipAddr(addr, cidr) {
     return new Array(num + 1).join(this);
   }
 
-  this.getFullAddress = function () {
+  this.FullAddress = function () {
     if (!this.Valid()) return '';
-    return this.getAddress() + '/' + this.cidr;
+    return this.Address() + '/' + this.cidr;
   }
 
-  this.getWildcard = function () {
+  this.Wildcard = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
       case 6:  return this.v6_bin_expand(this.binv());
@@ -66,16 +66,16 @@ function ipAddr(addr, cidr) {
       default: return '';
     }
   }
-  this.getNetmask = function () {
+  this.Netmask = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
-      case 6:  return this.v6_bin_expand(this.getBinmask());
-      case 4:  return this.v4_bin_expand(this.getBinmask());
+      case 6:  return this.v6_bin_expand(this.Binmask());
+      case 4:  return this.v4_bin_expand(this.Binmask());
       default: return '';
     }
   }
 
-  this.getNetwork = function () {
+  this.Network = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
       case 6:  return this.ip6_network();
@@ -84,7 +84,7 @@ function ipAddr(addr, cidr) {
     }
   }
 
-  this.getMaxHost = function () {
+  this.MaxHost = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
       case 6:  return this.ip6_max_host();
@@ -93,7 +93,7 @@ function ipAddr(addr, cidr) {
     }
   }
 
-  this.getMinHost = function () {
+  this.MinHost = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
       case 6:  return this.ip6_min_host();
@@ -102,12 +102,12 @@ function ipAddr(addr, cidr) {
     }
   }
 
-  this.getBroadcast = function () {
+  this.Broadcast = function () {
     if (this.Version() != 4) return '';
     if (!this.Valid()) return '';
 
-    var ip_quads   = this.getAddress().split('.');
-    var mask_quads = this.getWildcard().split('.');
+    var ip_quads   = this.Address().split('.');
+    var mask_quads = this.Wildcard().split('.');
     var outp = [];
 
     for (var i=0; i<=3; i++)
@@ -116,7 +116,7 @@ function ipAddr(addr, cidr) {
     return outp.join('.');
   }
 
-  this.getExpanded = function () {
+  this.Expanded = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
       case 6:  return this.ip6_expand(this.addr.toUpperCase());
@@ -125,7 +125,7 @@ function ipAddr(addr, cidr) {
     }
   }
 
-  this.getAddress = function () {
+  this.Address = function () {
     if (!this.ValidAddress()) return '';
     switch (this.Version()) {
       case 6:  return this.ip6_compressed();
@@ -135,7 +135,7 @@ function ipAddr(addr, cidr) {
   }
 
   /* Due to the maximum value of 2^128, we're using strings */
-  this.getHostCount = function () {
+  this.HostCount = function () {
     if (!this.Valid()) return '';
     switch (this.Version()) {
       case 6:  return this.v6cidrs[128-this.cidr];
@@ -144,13 +144,13 @@ function ipAddr(addr, cidr) {
     }
   }
 
-  this.getBinmask = function () {
+  this.Binmask = function () {
     if (!this.ValidCidr()) return '';
     return this.cidr_expand(this.cidr, this.maxcidr);
   }
 
 
-  this.getIP4MappedIP6 = function () {
+  this.IP4MappedIP6 = function () {
     if (this.Version() != 4) return '';
     var v4mappedv6 = ip6_ip4_expand('::FFFF:' + this.addr);
     if (!v4mappedv6) return '';
@@ -223,27 +223,27 @@ function ipAddr(addr, cidr) {
   }
 
   this.ip4_min_host = function () {
-    var quads = this.getNetwork().split('.');
+    var quads = this.Network().split('.');
     if (this.cidr != 32) quads[3]++;
     return quads.join('.');
   }
 
   this.ip6_min_host = function () {
-    var chunks = this.getNetwork().split(':');
+    var chunks = this.Network().split(':');
     chunks[7] = 1 + parseInt(chunks[7], 16);
     chunks[7] = chunks[7].toString(16);
     return this.ip6_expand(chunks.join(':'));
   }
 
   this.ip4_max_host = function () {
-    var quads = this.getBroadcast().split('.');
+    var quads = this.Broadcast().split('.');
     if (this.cidr != 32) quads[3]--;
     return quads.join('.');
   }
 
   this.ip6_max_host = function () {
-    var chunks      = this.getExpanded().split(':');
-    var mask_chunks = this.getWildcard().split(':');
+    var chunks      = this.Expanded().split(':');
+    var mask_chunks = this.Wildcard().split(':');
     var outp = [];
 
     for (var i=0; i<=7; i++) {
@@ -327,7 +327,7 @@ function ipAddr(addr, cidr) {
 
   this.binv = function () {
     var outp = '';
-    var bin = this.getBinmask();
+    var bin = this.Binmask();
     for (var i = 0; i < bin.length; i++) {
       if (bin.charAt(i) == 1)
         outp += '0';
@@ -529,6 +529,6 @@ function ipAddr(addr, cidr) {
   return this;
 }
 
-/* This gets overridden by ipAddr_l8n.js */
+/* This s overridden by ipAddr_l8n.js */
 ipAddr.prototype.l8n = function (msg) {return msg};
 
