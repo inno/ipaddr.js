@@ -60,6 +60,14 @@ function ipAddr(addr, cidr) {
     return new Array(num + 1).join(this);
   }
 
+  this.isIPv4() = function () {
+    return (this.Version() == 4);
+  }
+
+  this.isIPv6() = function () {
+    return (this.Version() == 6);
+  }
+
   this.FullAddress = function () {
     if (!this.Valid()) return '';
     return this.Address() + '/' + this.cidr;
