@@ -22,7 +22,7 @@ this.locale = 'en_US';
 
 ipAddr.prototype.l8nTable={
     'enterAddress':{
-        'en_US':'Please enter an address',
+        'en_US':'Please enter an address'
     },
     'IP6ErrorInvalidChar':{
         'en_US':'Ipv6 Error: Address contains an invalid character'
