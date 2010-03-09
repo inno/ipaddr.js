@@ -433,7 +433,7 @@ function ipAddr(addr, cidr) {
     if (octet.length != 4)
       return this.setFailMsg('IP4ErrorFourOctets');
 
-    for (var i=0; i < 3; i++) {
+    for (var i=0; i < 4; i++) {
       var quad = octet[i]
       if (!quad)
         return this.setFailMsg('IP4ErrorFourOctets');
