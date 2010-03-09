@@ -272,7 +272,6 @@ function testTotallyInvalid () {
     '1',
     '1.2',
     '1.2.3',
-    '1.2.3.400',
     'bad'];
 
   Looper(tests, false, 0);
@@ -284,6 +283,7 @@ function testInvalidIPv4 () {
     '1.2.3.4.5',
     '256.256.256.256',
     'q.1.2.3',
+    '1.2.3.400',
     'a.b.c.d'];
 
   Looper(tests, false, 4);
